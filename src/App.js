@@ -32,7 +32,7 @@ const App = () => {
   };
   
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', gap: '00px' }}>
       {pieData && <PieChart data={pieData} onCategorySelect={handlePieChartClick}/>}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         {lineData && <LineChart data={lineData} />}

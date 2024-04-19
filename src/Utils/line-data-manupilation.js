@@ -39,6 +39,6 @@ export const fitlerByCategory = (data, selectedCategory, pieData) => {
       (item) => item.USER_TITLE && item.USER_TITLE.startsWith(selectedCategory)
     );
   }
-  console.log(filteredData);
+ 
   return filteredData;
 };

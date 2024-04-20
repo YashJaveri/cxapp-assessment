@@ -15,16 +15,26 @@ const App = () => {
 
 
   useEffect(() => {
-    fetchData().then(parseData).then((d) => {
-      setData(d);
-      setPieData(compressPieData(getPieData(d), NUMBER_OF_SECTIONS));
-      setLineData(getLineData(d, lineFilterType));
-    });
-  }, [selectedCategory, lineFilterType]);  
+    fetchData()
+      .then(parseData)
+      .then((d) => {
+        setData(d);
+        const pieChartData = compressPieData(getPieData(d), NUMBER_OF_SECTIONS);
+        setPieData(pieChartData);
+        // setLineData(getLineData(d, lineFilterType));
+      });
+  }, []);
+
+  useEffect(() => {   
+    let filteredData = data;
+    if (selectedCategory) {
+      filteredData = fitlerByCategory(data, selectedCategory, pieData);      
+    }
+    setLineData(getLineData(filteredData, lineFilterType));
+  }, [selectedCategory, lineFilterType]);
 
   const handlePieChartClick = (selectedSection) => {
-    setSelectedCategory(selectedSection.name);
-    setLineData(getLineData(fitlerByCategory(data, selectedSection.name, pieData), lineFilterType));
+    setSelectedCategory(selectedSection.name);    
   };
 
   const handleFilterTypeChange = (event) => {

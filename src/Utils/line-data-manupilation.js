@@ -1,8 +1,8 @@
 export const getLineData = (data, filterType) => {
   const timeSeriesData = {};
   console.log(filterType);
-  data.forEach((curr) => {
-    const fitler = filterType === "Start Time" ? curr.START_TM : curr.END_TM;
+  data.forEach((curr) => {    
+    const fitler = filterType === "START_TM" ? curr.START_TM : curr.END_TM;
     const time = new Date(fitler);
     const hour = time.getHours();
     const hourRange = `${hour}-${(hour + 1) % 24}`; // Calculate the hour range for the time slot
@@ -17,11 +17,12 @@ export const getLineData = (data, filterType) => {
     time: timeKey,
     value: timeSeriesData[timeKey],
   }));
+  console.log(lineChartData)
   return lineChartData;
 };
 
 export const fitlerByCategory = (data, selectedCategory, pieData) => {
-  console.log("Slected: ", selectedCategory, pieData);
+  console.log("Selected: ", selectedCategory, pieData);
   if (selectedCategory === null) return data;
 
   const categories = pieData
@@ -35,9 +36,11 @@ export const fitlerByCategory = (data, selectedCategory, pieData) => {
         item.USER_TITLE && !categories.includes(item.USER_TITLE.split(",")[0])
     );
   } else {
+    console.log(filteredData)
     filteredData = data.filter(
       (item) => item.USER_TITLE && item.USER_TITLE.startsWith(selectedCategory)
     );
+    console.log("After: ", filteredData)
   }
  
   return filteredData;

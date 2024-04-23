@@ -12,7 +12,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { display } from "../Utils/line-data-manupilation";
 
-const LineChartComponent = ({ data, startDate, endDate, timeMode, handleTimeChange, handleFilterTypeChange }) => {  
+const LineChartComponent = ({ data, startDate, endDate, timeMode, handleTimeChange }) => {  
   return (
     <div>
       <div
@@ -64,7 +64,7 @@ const LineChartComponent = ({ data, startDate, endDate, timeMode, handleTimeChan
           activeDot={{ r: 8 }}
         />
       </LineChart>
-      <div>
+      {/* <div>
         <label htmlFor="filterType">Filter by:</label>
         <select
           id="filterType"
@@ -74,7 +74,7 @@ const LineChartComponent = ({ data, startDate, endDate, timeMode, handleTimeChan
           <option value="START_TM">Start Time</option>
           <option value="END_TM">End Time</option>
         </select>
-      </div>
+      </div> */}
     </div>
   );
 };

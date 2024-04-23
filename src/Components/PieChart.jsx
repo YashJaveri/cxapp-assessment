@@ -25,7 +25,7 @@ const PieChartComponent = ({ data, onCategorySelect }) => {
         fontSize="20px"
         fontWeight="bold"
       >
-        User titlewise Capacity
+        User Titlewise Capacity
       </text>
       <Pie
         data={data}

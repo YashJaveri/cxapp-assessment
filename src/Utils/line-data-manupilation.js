@@ -1,37 +1,54 @@
-export const display = (data) => {  
+export const display = (data) => {
   const timeSeriesData = {};
-  let lineChartData = undefined;
+  const uniqueSpaceTypes = ["desk", "Room", "office"] //This can be calcualted on the fly and then cached
   if (data) {
     data.forEach((curr) => {
-      // const fitler = filterType === "START_TM" ? curr.START_TM : curr.END_TM;
+      const spaceType = curr.SPACE_TYPE;      
       const time = new Date(curr.START_TM);
       const hour = time.getHours();
       const hourRange = `${hour}-${(hour + 1) % 24}`; // Calculate the hour range for the time slot
-
+  
       if (!timeSeriesData[hourRange]) {
-        timeSeriesData[hourRange] = 0;
+        timeSeriesData[hourRange] = {};
       }
-      timeSeriesData[hourRange] += curr.CAPACITY;
+      if (!timeSeriesData[hourRange][spaceType]) {
+        timeSeriesData[hourRange][spaceType] = 0;
+      }
+      timeSeriesData[hourRange][spaceType] += curr.CAPACITY; // Incrementally accumulate capacity
     });
-
-    lineChartData = Object.keys(timeSeriesData).map((timeKey) => ({
-      time: timeKey,
-      value: timeSeriesData[timeKey],
-    }));
-  }  
+  }
+  const lineChartData = [];
+  
+  Object.keys(timeSeriesData).forEach((timeKey) => {
+    const timeData = timeSeriesData[timeKey];
+    const timeEntry = { time: timeKey };
+        
+    uniqueSpaceTypes.forEach((spaceType) => {
+      timeEntry[spaceType] = timeData[spaceType] || 0;
+    });
+    
+    lineChartData.push(timeEntry);
+  });
+    
   return lineChartData;
 };
 
-export const filterByTime = (data, startDate, endDate) => {
-  let lineChartData = [];  
-  if (data) {
-    if (startDate !== null && endDate !== null) {
-      if (startDate === null) {
+export const customeFilter = (data, startDate, endDate, campus) => {  
+  let lineChartData = [];
+  if (data) {    
+    //Filter by campuses
+    data = data.filter((d) => {
+      return campus === "All" || campus == d.BUILDING_NAME;
+    });    
+    
+    //Fitler by start and end time
+    if (startDate != null && endDate != null) {
+      if (startDate == null) {
         lineChartData = data.filter((curr) => {
           const currEndTime = new Date(curr.END_TM);
           return currEndTime <= endDate;
         });
-      } else if (endDate === null) {
+      } else if (endDate == null) {
         lineChartData = data.filter((curr) => {
           const currStartTime = new Date(curr.START_TM);
           return currStartTime >= startDate;
@@ -40,13 +57,13 @@ export const filterByTime = (data, startDate, endDate) => {
         lineChartData = data.filter((curr) => {
           const currStartTime = new Date(curr.START_TM);
           const currEndTime = new Date(curr.END_TM);
-          return (currStartTime >= startDate && currEndTime <= endDate) || (startDate <= currEndTime && currEndTime <= endDate) || (startDate <= currStartTime && currStartTime <= endDate);
+          return !(currEndTime <= startDate || currStartTime >= endDate);
         });
       }
     } else {
       lineChartData = data;
     }
-  }  
+  }
   return lineChartData;
 };
 

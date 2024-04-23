@@ -1,18 +1,24 @@
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from "recharts";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { display } from "../Utils/line-data-manupilation";
 
-const LineChartComponent = ({ data, startDate, endDate, timeMode, handleTimeChange }) => {  
+const LineChartComponent = ({
+  data,
+  startDate,
+  endDate,
+  handleTimeChange,
+}) => {  
+  const uniqueSpaceTypes = ["desk", "Room", "office"] //This can be calcualted on the fly and then cached
   return (
     <div>
       <div
@@ -45,8 +51,8 @@ const LineChartComponent = ({ data, startDate, endDate, timeMode, handleTimeChan
       </div>
       <LineChart
         width={800}
-        height={400}
         data={display(data)}
+        height={400}
         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
@@ -57,12 +63,15 @@ const LineChartComponent = ({ data, startDate, endDate, timeMode, handleTimeChan
         <YAxis label={{ value: "Value", angle: -90, position: "insideLeft" }} />
         <Tooltip />
         <Legend />
-        <Line
-          type="monotone"
-          dataKey="value"
-          stroke="#8884d8"
-          activeDot={{ r: 8 }}
-        />
+        {uniqueSpaceTypes.map((d, index) => (
+          <Line
+            key={index}
+            type="monotone"
+            dataKey={d}            
+            stroke={`#${Math.floor(Math.random() * 16777215).toString(16)}`} // Random color
+            activeDot={{ r: 8 }}
+          />
+        ))}
       </LineChart>
       {/* <div>
         <label htmlFor="filterType">Filter by:</label>
